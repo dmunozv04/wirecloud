@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright (c) 2012-2017 CoNWeT Lab., Universidad Politécnica de Madrid
-# Copyright (c) 2019-2020 Future Internet Consulting and Development Solutions S.L.
+# Copyright (c) 2019-2024 Future Internet Consulting and Development Solutions S.L.
 
 # This file is part of Wirecloud.
 
@@ -32,6 +32,7 @@ from wirecloud.catalogue import utils as catalogue
 from wirecloud.catalogue.models import CatalogueResource
 from wirecloud.commons.baseviews import Resource, Service
 from wirecloud.commons.utils.db import save_alternative
+from wirecloud.commons.utils.cache import return_304_if_not_modified
 from wirecloud.commons.utils.http import authentication_required, authentication_required_cond, build_error_response, get_content_type, normalize_boolean_param, consumes, parse_json_request, produces
 from wirecloud.commons.utils.template import is_valid_name, is_valid_vendor, is_valid_version, TemplateParser
 from wirecloud.commons.utils.transaction import commit_on_http_success
@@ -155,9 +156,10 @@ class WorkspaceEntry(Resource):
             workspace = get_object_or_404(Workspace, pk=workspace_id)
         else:
             workspace = get_object_or_404(Workspace, creator__username=owner, name=name)
-
         if not workspace.is_accessible_by(request.user):
             return build_error_response(request, 403, _("You don't have permission to access this workspace"))
+        
+        return_304_if_not_modified(request, workspace.last_modified)
 
         workspace_data = get_global_workspace_data(workspace, request.user)
 

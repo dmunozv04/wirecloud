@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright (c) 2011-2017 CoNWeT Lab., Universidad Politécnica de Madrid
+# Copyright (c) 2024 Future Internet Consulting and Development Solutions S.L.
 
 # This file is part of Wirecloud.
 
@@ -31,7 +32,7 @@ from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView
 
 from wirecloud.catalogue.models import CatalogueResource
-from wirecloud.commons.utils.cache import patch_cache_headers
+from wirecloud.commons.utils.cache import patch_cache_headers, return_304_if_not_modified
 from wirecloud.commons.utils.downloader import download_local_file
 from wirecloud.commons.utils.http import build_response, build_downloadfile_response, get_current_domain
 from wirecloud.platform.themes import get_active_theme_name
@@ -125,6 +126,8 @@ def serve_showcase_media(request, vendor, name, version, file_path):
     # For now, all widgets and operators are freely accessible/distributable
     # if not resource.is_available_for(request.user):
     #     return build_error_response(request, 403, "Forbidden")
+    
+    return_304_if_not_modified(request, resource.creation_date.timestamp()*1000)
 
     if resource.resource_type() == 'widget' and request.GET.get('entrypoint', 'false') == 'true':
         return process_widget_code(request, resource)

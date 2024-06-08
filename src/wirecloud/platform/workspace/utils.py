@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright (c) 2008-2017 CoNWeT Lab., Universidad Politécnica de Madrid
-# Copyright (c) 2019-2020 Future Internet Consulting and Development Solutions S.L.
+# Copyright (c) 2019-2024 Future Internet Consulting and Development Solutions S.L.
 
 # This file is part of Wirecloud.
 
@@ -208,6 +208,10 @@ def _variable_values_cache_key(workspace, user):
 
 def _workspace_cache_key(workspace, user):
     return '_workspace_global_data/%s/%s/%s' % (workspace.id, workspace.last_modified, user.id)
+
+
+def _workspace_resources_cache_key(workspace, user):
+    return '_workspace_resources/%s/%s/%s' % (workspace.id, workspace.last_modified, user.id)
 
 
 class VariableValueCacheManager():
@@ -631,3 +635,41 @@ def delete_workspace(workspace=None, user=None, name=None):
     for iwidget in iwidgets:
         iwidget.delete()
     workspace.delete()
+
+
+def _get_workspace_resources_data(request, workspace):
+    resources = set()
+    for tab in workspace.tab_set.all():
+        for iwidget in tab.iwidget_set.select_related('widget__resource').all():
+            if iwidget.widget is not None and iwidget.widget.resource.is_available_for(workspace.creator):
+                resources.add(iwidget.widget.resource)
+
+    for operator_id, operator in workspace.wiringStatus['operators'].items():
+        vendor, name, version = operator['name'].split('/')
+        try:
+            resource = CatalogueResource.objects.get(vendor=vendor, short_name=name, version=version)
+            if resource.is_available_for(workspace.creator):
+                resources.add(resource)
+        except CatalogueResource.DoesNotExist:
+            pass
+
+    result = {}
+    process_urls = request.GET.get('process_urls', 'true') == 'true'
+    for resource in resources:
+        if resource.is_available_for(workspace.creator):
+            options = resource.get_processed_info(request, process_urls=process_urls, url_pattern_name="wirecloud.showcase_media")
+            result[resource.local_uri_part] = options
+    
+    return json.dumps(result, cls=LazyEncoder, sort_keys=True)
+
+
+def get_workspace_resources_data(request, workspace):
+    user = request.user
+    key = _workspace_resources_cache_key(workspace, user)
+    data = cache.get(key)
+    if data is None:
+        data = CacheableData(_get_workspace_resources_data(request, workspace), timestamp=workspace.last_modified)
+        key = _workspace_resources_cache_key(workspace, user)
+        cache.set(key, data)
+
+    return data

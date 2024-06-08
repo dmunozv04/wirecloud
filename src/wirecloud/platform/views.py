@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright (c) 2012-2017 CoNWeT Lab., Universidad Politécnica de Madrid
+# Copyright (c) 2024 Future Internet Consulting and Development Solutions S.L.
 
 # This file is part of Wirecloud.
 
@@ -160,8 +161,6 @@ def render_workspace_view(request, owner, name):
 
     if settings.ALLOW_ANONYMOUS_ACCESS is False and request.user.is_authenticated is False:
         return redirect_to_login(request.get_full_path())
-
-    get_workspace_list(request.user)
 
     workspace = get_object_or_404(Workspace, creator__username=owner, name=name)
     if not workspace.is_accessible_by(request.user):
