@@ -2,7 +2,8 @@
 ARG WIRECLOUD_PYTHON_VERSION=3.10
 ARG WIRECLOUD_DEBIAN_VERSION=bookworm
 
-FROM python:${WIRECLOUD_PYTHON_VERSION}-${WIRECLOUD_DEBIAN_VERSION} as builder
+#$BUILDPLATFORM allows to build the image on the native platform of the builder, avoiding emulation
+FROM --platform=$BUILDPLATFORM python:${WIRECLOUD_PYTHON_VERSION}-${WIRECLOUD_DEBIAN_VERSION} AS builder
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \
