@@ -1015,10 +1015,13 @@
 
                 view.onHistoryChange({
                     workspace_owner: "user",
-                    workspace_name: "dashboard"
+                    workspace_name: "dashboard",
+                    params: {
+                        test: "test"
+                    }
                 });
 
-                expect(Wirecloud.changeActiveWorkspace).toHaveBeenCalledWith(workspace, {initialtab: undefined, history: 'ignore'});
+                expect(Wirecloud.changeActiveWorkspace).toHaveBeenCalledWith(workspace, {initialtab: undefined, history: 'ignore', params: {test: "test"}});
             });
 
             it("should handle tab changes", () => {

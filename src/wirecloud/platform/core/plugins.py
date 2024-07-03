@@ -395,7 +395,11 @@ class WirecloudCorePlugin(WirecloudPlugin):
             'longdescription': {
                 'label': _('Long description'),
                 'description': _("Detailed workspace's description. This description can contain formatting."),
-            }
+            },
+            "params": {
+                "description": _("Dictionary with the parameters of the workspace"),
+                "label": _("Params"),
+            },
         }
 
     def get_workspace_preferences(self):

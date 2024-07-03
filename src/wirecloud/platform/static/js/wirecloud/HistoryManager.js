@@ -50,6 +50,9 @@
             data.title = document.title;
         }
         for (const key in data) {
+            if (typeof data[key] === 'object') {
+                continue;
+            }
             data[key] = "" + data[key];
         }
         return data;
@@ -66,11 +69,17 @@
         url.search = window.location.search;
 
         for (key in data) {
-            if (['workspace_name', 'workspace_owner', 'workspace_title', 'tab_id', 'title'].indexOf(key) !== -1) {
+            if (['workspace_name', 'workspace_owner', 'workspace_title', 'tab_id', 'title', 'params'].indexOf(key) !== -1) {
                 continue;
             }
             hash += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
         }
+        if ("params" in data) {
+            for (key in data.params) {
+                hash += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data.params[key]);
+            }
+        }
+
         url.hash = '#' + hash.substr(1);
 
         return url;

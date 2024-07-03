@@ -20,7 +20,6 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from relatives.utils import object_edit_link
 
 from wirecloud.platform import models
 
@@ -68,9 +67,8 @@ class TabPreferenceInline(admin.TabularInline):
 class TabInline(admin.TabularInline):
 
     model = models.Tab
-    edit_link = object_edit_link(_("Edit"))
-    fields = ('name', 'position', edit_link)
-    readonly_fields = (edit_link,)
+    show_change_link = True
+    fields = ('name', 'position')
     ordering = ('position',)
     extra = 1
 

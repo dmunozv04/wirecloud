@@ -50,6 +50,30 @@
         });
     };
 
+    const get_hash_parameters = function get_hash_parameters() {
+
+        const hash = window.location.hash;
+        const hash_parameters = {};
+
+        if (hash.length > 1) {
+            hash.substring(1).split('&').forEach(function (param) {
+                const parts = param.split('=');
+                hash_parameters[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
+            });
+        }
+
+        if ('view' in hash_parameters) {
+            delete hash_parameters.view;
+        }
+
+        if ('tab' in hash_parameters) {
+            delete hash_parameters.tab;
+        }
+
+        return hash_parameters;
+
+    };
+
     const switch_active_workspace = function switch_active_workspace(options, workspace) {
 
         return new Wirecloud.Task(gettext("Switching active workspace"), (resolve, reject) => {
@@ -58,8 +82,13 @@
                 workspace_owner: workspace.owner,
                 workspace_name: workspace.name,
                 workspace_title: workspace.title,
-                view: "workspace"
+                view: "workspace",
+                params: {}
             };
+
+            if ('params' in options) {
+                state.params = options.params;
+            }
 
             if (options.initialtab != null) {
                 state.tab = options.initialtab;
@@ -72,6 +101,10 @@
             } else if (options.history === "replace") {
                 Wirecloud.HistoryManager.replaceState(state);
             }
+
+            workspace.contextManager.modify({
+                params: state.params
+            });
 
             if (this.activeWorkspace) {
                 this.activeWorkspace.unload();
@@ -316,7 +349,8 @@
                         name: state.workspace_name
                     }, {
                         initialtab: state.tab,
-                        history: "replace"
+                        history: "replace",
+                        params: get_hash_parameters()
                     }
                 );
             }, (error) => {

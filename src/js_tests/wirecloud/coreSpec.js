@@ -52,7 +52,8 @@
                     name: "home",
                     title: "Home",
                     contextManager: {
-                        addCallback: jasmine.createSpy()
+                        addCallback: jasmine.createSpy(),
+                        modify: jasmine.createSpy()
                     }
                 };
                 Wirecloud.workspaceInstances = {1: initworkspace};
@@ -170,7 +171,8 @@
                         workspace_name: "home",
                         workspace_title: "Home",
                         view: "workspace",
-                        tab: "MyTab"
+                        tab: "MyTab",
+                        params: {}
                     });
                     expect(Wirecloud.activeWorkspace).toBe(initworkspace);
                     expect(workspace).toBe(initworkspace);
@@ -195,7 +197,8 @@
                         workspace_owner: "wirecloud",
                         workspace_name: "home",
                         workspace_title: "Home",
-                        view: "workspace"
+                        view: "workspace",
+                        params: {}
                     });
                     expect(Wirecloud.activeWorkspace).toBe(initworkspace);
                     expect(workspace).toBe(initworkspace);

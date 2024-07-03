@@ -449,7 +449,8 @@
                 workspace_owner: currentState.workspace_owner,
                 workspace_name: currentState.workspace_name,
                 workspace_title: currentState.workspace_title,
-                view: 'workspace'
+                view: 'workspace',
+                params: currentState.params
             };
         }
 
@@ -540,7 +541,7 @@
                 this.layout.slideOut().content.clear().appendChild(alert_msg);
                 Wirecloud.dispatchEvent('viewcontextchanged');
             } else if (Wirecloud.activeWorkspace == null || (nextWorkspace.id !== Wirecloud.activeWorkspace.id)) {
-                Wirecloud.changeActiveWorkspace(nextWorkspace, {initialtab: newState.tab, history: 'ignore'});
+                Wirecloud.changeActiveWorkspace(nextWorkspace, {initialtab: newState.tab, history: 'ignore', params: newState.params});
             } else if (newState.tab != null) {
                 target_tab = this.findTab(newState.tab_id);
                 this.notebook.goToTab(target_tab);
