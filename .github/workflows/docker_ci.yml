@@ -58,7 +58,6 @@ jobs:
               "var-cache-apt": "/var/cache/apt",
               "root-cache-pip": "/root/.cache/pip"
             }
-          skip-extraction: ${{ steps.cache.outputs.cache-hit }}
   
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
