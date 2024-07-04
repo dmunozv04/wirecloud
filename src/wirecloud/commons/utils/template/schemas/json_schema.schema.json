@@ -431,7 +431,8 @@
                         "boolean",
                         "number",
                         "password",
-                        "list"
+                        "list",
+                        "code"
                     ]
                 },
                 "label": {
@@ -469,59 +470,75 @@
                     "description": "Whether to store a different value for each user",
                     "default": false,
                     "type": "boolean"
-                },
-                "if": {
-                    "properties": {
-                        "type": {
-                            "enum": [
-                                "list"
-                            ]
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "const": "list"
+                            }
                         }
-                    }
-                },
-                "then": {
-                    "required": [
-                        "options"
-                    ],
-                    "properties": {
-                        "options": {
-                            "description": "List of options for the preference",
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "required": [
-                                    "value"
-                                ],
-                                "properties": {
-                                    "value": {
-                                        "description": "Value of the preference",
-                                        "type": [
-                                            "string",
-                                            "boolean",
-                                            "number"
-                                        ]
+                    },
+                    "then": {
+                        "required": [
+                            "options"
+                        ],
+                        "properties": {
+                            "options": {
+                                "description": "List of options for the preference",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "value"
+                                    ],
+                                    "properties": {
+                                        "value": {
+                                            "description": "Value of the preference",
+                                            "type": [
+                                                "string",
+                                                "boolean",
+                                                "number"
+                                            ]
+                                        }
                                     }
                                 }
                             }
                         }
+                    },
+                    "else": {
+                        "description": "The value of the preference",
+                        "properties": {
+                            "value": {
+                                "type": [
+                                    "string",
+                                    "boolean",
+                                    "number",
+                                    "null"
+                                ]
+                            }
+                        }
                     }
                 },
-                "else": {
-                    "description": "The value of the preference",
-                    "required": [
-                        "value"
-                    ],
-                    "properties": {
-                        "value": {
-                            "type": [
-                                "string",
-                                "boolean",
-                                "number"
-                            ]
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "const": "code"
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "language": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
-            }
+            ]
         },
         "component_property": {
             "description": "The properties, that save persistent information about the component",
@@ -1090,42 +1107,50 @@
                             "string",
                             "object"
                         ],
-                        "if": {
-                            "type": "object"
-                        },
-                        "then": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/$defs/Position2D"
+                        "allOf": [
+                            {
+                                "if": {
+                                    "type": "object"
+                                },
+                                "then": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/$defs/Position2D"
+                                        }
+                                    ]
+                                },
+                                "else": {
+                                    "enum": [
+                                        "auto"
+                                    ]
                                 }
-                            ]
-                        },
-                        "else": {
-                            "enum": [
-                                "auto"
-                            ]
-                        }
+                            }
+                        ]
                     },
                     "targethandle": {
                         "type": [
                             "string",
                             "object"
                         ],
-                        "if": {
-                            "type": "object"
-                        },
-                        "then": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/$defs/Position2D"
+                        "allOf": [
+                            {
+                                "if": {
+                                    "type": "object"
+                                },
+                                "then": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/$defs/Position2D"
+                                        }
+                                    ]
+                                },
+                                "else": {
+                                    "enum": [
+                                        "auto"
+                                    ]
                                 }
-                            ]
-                        },
-                        "else": {
-                            "enum": [
-                                "auto"
-                            ]
-                        }
+                            }
+                        ]
                     }
                 }
             }
