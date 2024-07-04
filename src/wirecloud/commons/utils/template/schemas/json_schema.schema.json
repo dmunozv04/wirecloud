@@ -1,7 +1,7 @@
 {
-    "$id": "https://example.com",
+    "$id": "https://raw.githubusercontent.com/Wirecloud/wirecloud/develop/src/wirecloud/commons/utils/template/schemas/json_schema.schema.json",
     "$schema": "https://json-schema.org/draft-07/schema",
-    "title": "WireCloud Mashable Application Component Descriptions",
+    "title": "WireCloud Mashable Application Component Description",
     "type": "object",
     "required": [
         "vendor",
@@ -10,67 +10,70 @@
     ],
     "properties": {
         "authors": {
-            "description": "Main developers of this mashable application component",
-            "type": [
-                "array",
-                "string"
-            ],
-            "items": {
-                "$ref": "#/$defs/contact"
-            }
+            "description": "Main developers of this mashable application component.",
+            "allOf": [
+                {
+                    "$ref": "#/$defs/contacts"
+                }
+            ]
         },
         "changelog": {
-            "description": "Relative path to a markdown file detailing the changes made to the mashable application component in each version",
+            "description": "Relative path to a markdown file detailing the changes made to the mashable application component in each version.",
             "type": "string"
         },
         "contributors": {
-            "description": "Contributors of this mashable application component",
-            "type": [
-                "array",
-                "string"
-            ],
-            "items": {
-                "$ref": "#/$defs/contact"
-            }
+            "description": "Contributors of this mashable application component.",
+            "allOf": [
+                {
+                    "$ref": "#/$defs/contacts"
+                }
+            ]
         },
         "description": {
-            "description": "A brief textual description of the mashable application component",
+            "description": "A brief textual description of the mashable application component.",
             "type": "string"
         },
         "doc": {
-            "description": "Absolute or template-relative URL of the widget documentation",
+            "description": "Absolute or template-relative URL of the widget documentation.",
             "type": "string"
         },
         "email": {
-            "description": "E-mail address to get in touch with the developer(s)",
-            "type": "string"
+            "description": "E-mail address to get in touch with the developer(s).",
+            "type": "string",
+            "format": "email"
         },
         "homepage": {
-            "description": "The url to the project homepage",
+            "description": "The url to the project homepage.",
             "type": "string"
         },
         "image": {
-            "description": "Absolute or template-relative URL of the resource image for the catalog",
+            "description": "Absolute or template-relative URL of the resource image for the catalog.",
             "type": "string"
         },
         "issuetracker": {
-            "description": "Absolute URL of the issue tracker for the mashable application component",
+            "description": "Absolute URL of the issue tracker for the mashable application component.",
             "type": "string"
         },
         "license": {
-            "description": "Name of the license associated to the mashable application component",
-            "type": "string"
+            "description": "Name of the license associated to the mashable application component.",
+            "type": "string",
+            "examples": [
+                "Apache 2.0",
+                "MIT",
+                "GPLv3",
+                "BSD"
+            ]
         },
         "licenseurl": {
-            "description": "Absolute or template-relative URL of the full license document associated to the mashable application component",
+            "description": "Absolute or template-relative URL of the full license document associated to the mashable application component.",
             "type": "string"
         },
         "longDescription": {
-            "description": "A detailed  description of the mashable application component (using Markdown syntax by default)",
+            "description": "A detailed  description of the mashable application component (using Markdown syntax by default).",
             "type": "string"
         },
         "macversion": {
-            "description": "Version of the MACD specification used to describe the mashable application component",
+            "description": "Version of the MACD specification used to describe the mashable application component.",
             "default": 1,
             "enum": [
                 1,
@@ -79,11 +82,11 @@
             "type": "integer"
         },
         "name": {
-            "description": "Name of the mashable application component",
+            "description": "Name of the mashable application component.",
             "type": "string"
         },
         "requirements": {
-            "description": "List of requirements for the mashable application component",
+            "description": "List of requirements for the mashable application component.",
             "required": [
                 "name"
             ],
@@ -91,14 +94,29 @@
             "items": {
                 "properties": {
                     "name": {
-                        "description": "Name of the requirement",
+                        "description": "Name of the requirement.",
                         "type": "string"
                     },
                     "type": {
-                        "type": "string"
+                        "description": "Type of the requirement. Currently only `feature` is supported.",
+                        "type": "string",
+                        "enum": [
+                            "feature"
+                        ]
                     }
                 },
-                "type": "object"
+                "additionalProperties": false,
+                "type": "object",
+                "examples": [
+                    {
+                        "type": "feature",
+                        "name": "StyledElements"
+                    },
+                    {
+                        "type": "feature",
+                        "name": "DashboardManagement"
+                    }
+                ]
             }
         },
         "smartphoneimage": {
@@ -107,11 +125,11 @@
         },
         "title": {
             "default": "",
-            "description": "Name used in the user interface for the widget. This field can be translated, therefore this fieldis not used to uniquely identify the widget",
+            "description": "Name used in the user interface for the widget. This field can be translated, therefore this field is not used to uniquely identify the widget.",
             "type": "string"
         },
         "type": {
-            "description": "Type of the mashable application component",
+            "description": "Type of the mashable application component.",
             "enum": [
                 "mashup",
                 "operator",
@@ -120,11 +138,11 @@
             "type": "string"
         },
         "vendor": {
-            "description": "Name of the vendor of the mashable application component",
+            "description": "Name of the vendor of the mashable application component.",
             "type": "string"
         },
         "version": {
-            "description": "Version of the mashable application component",
+            "description": "Version of the mashable application component.",
             "$ref": "#/$defs/version"
         }
     },
@@ -143,19 +161,21 @@
             "then": {
                 "properties": {
                     "preferences": {
-                        "description": "The user preferences, which may be changed through the platform interface",
+                        "description": "The user preferences, which may be changed through the platform interface.",
                         "type": "array",
                         "items": {
                             "$ref": "#/$defs/component_preference"
                         }
                     },
                     "properties": {
+                        "description": "The user properties, which the component code might change. Also known as persistent variables.",
                         "type": "array",
                         "items": {
                             "$ref": "#/$defs/component_property"
                         }
                     },
                     "wiring": {
+                        "description": "Wiring of the component. It defines the inputs and outputs of the component.",
                         "default": {},
                         "allOf": [
                             {
@@ -180,7 +200,7 @@
             "then": {
                 "properties": {
                     "contents": {
-                        "description": "The contents of the widget",
+                        "description": "The contents of the widget.",
                         "type": "object",
                         "required": [
                             "src"
@@ -236,7 +256,8 @@
                                     }
                                 }
                             }
-                        }
+                        },
+                        "additionalProperties": false
                     }
                 }
             }
@@ -256,9 +277,11 @@
                 ],
                 "properties": {
                     "widget_width": {
+                        "description": "Width of the widget.",
                         "$ref": "#/$defs/size"
                     },
                     "widget_height": {
+                        "description": "Height of the widget.",
                         "$ref": "#/$defs/size"
                     }
                 }
@@ -266,7 +289,7 @@
         },
         {
             "if": {
-                "oneOf": [
+                "anyOf": [
                     {
                         "properties": {
                             "type": {
@@ -289,12 +312,12 @@
             "then": {
                 "properties": {
                     "js_files": {
-                        "description": "List of scripts the operator is going to use",
-                        "allOf": [
-                            {
-                                "$ref": "#/$defs/js_files"
-                            }
-                        ]
+                        "description": "List of javascript files the component will use.",
+                        "type": "array",
+                        "items": {
+                            "description": "A javascript file.",
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -310,30 +333,31 @@
             "then": {
                 "properties": {
                     "preferences": {
-                        "description": "The user preferences",
+                        "description": "The user preferences.",
                         "type": "object",
                         "patternProperties": {
                             ".*": {
                                 "type": "string",
-                                "description": "A user preference"
+                                "description": "A user preference."
                             }
                         }
                     },
                     "tabs": {
-                        "description": "List of mashup tabs",
+                        "description": "List of mashup tabs.",
                         "type": "array",
                         "items": {
                             "$ref": "#/$defs/mashup_tab"
                         }
                     },
                     "params": {
-                        "description": "Mashup parameters",
+                        "description": "Mashup parameters.",
                         "type": "array",
                         "items": {
                             "$ref": "#/$defs/mashup_param"
                         }
                     },
                     "embedded": {
+                        "description": "The list of embedded resources for this mashup.",
                         "type": "array",
                         "required": [
                             "vendor",
@@ -357,8 +381,7 @@
                                     "type": "string"
                                 }
                             }
-                        },
-                        "description": "The list of embedded resources for this mashup"
+                        }
                     },
                     "wiring": {
                         "default": {
@@ -382,7 +405,7 @@
                                 "$ref": "#/$defs/wiring_mashup"
                             }
                         ],
-                        "description": "Mashup wiring"
+                        "description": "Mashup wiring."
                     }
                 }
             }
@@ -404,7 +427,8 @@
             "then": {
                 "properties": {
                     "entrypoint": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The entrypoint of the component. (deprecated)"
                     }
                 }
             }
@@ -412,7 +436,7 @@
     ],
     "$defs": {
         "component_preference": {
-            "description": "The user preferences, which may be changed through the platform interface. This element consisting of one, several or even none preference sub-elements",
+            "description": "The user preferences, which may be changed through the platform interface. This element consisting of one, several or even none preference sub-elements.",
             "type": "object",
             "required": [
                 "name",
@@ -420,11 +444,11 @@
             ],
             "properties": {
                 "name": {
-                    "description": "Name of the preference",
+                    "description": "Name of the preference.",
                     "type": "string"
                 },
                 "type": {
-                    "description": "Type of the preference",
+                    "description": "Type of the preference.",
                     "type": "string",
                     "enum": [
                         "text",
@@ -436,15 +460,15 @@
                     ]
                 },
                 "label": {
-                    "description": "Label of the preference",
+                    "description": "Label of the preference.",
                     "type": "string"
                 },
                 "description": {
-                    "description": "Description of the preference",
+                    "description": "Description of the preference.",
                     "type": "string"
                 },
                 "default": {
-                    "description": "Default value of the preference",
+                    "description": "Default value of the preference.",
                     "type": [
                         "string",
                         "boolean",
@@ -452,22 +476,22 @@
                     ]
                 },
                 "readOnly": {
-                    "description": "Whether the preference is read-only",
+                    "description": "Whether the preference is read-only.",
                     "default": false,
                     "type": "boolean"
                 },
                 "secure": {
-                    "description": "Direct access from the javascript code of the application mashup component to this variable is disallowed if the value of this attribute is true",
+                    "description": "Direct access from the javascript code of the application mashup component to this variable is disallowed if the value of this attribute is true.",
                     "default": false,
                     "type": "boolean"
                 },
                 "required": {
-                    "description": "Whether the preference is required",
+                    "description": "Whether the preference is required.",
                     "default": false,
                     "type": "boolean"
                 },
                 "multiuser": {
-                    "description": "Whether to store a different value for each user",
+                    "description": "Whether to store a different value for each user.",
                     "default": false,
                     "type": "boolean"
                 }
@@ -487,7 +511,7 @@
                         ],
                         "properties": {
                             "options": {
-                                "description": "List of options for the preference",
+                                "description": "List of options for the preference.",
                                 "type": "array",
                                 "items": {
                                     "type": "object",
@@ -496,7 +520,7 @@
                                     ],
                                     "properties": {
                                         "value": {
-                                            "description": "Value of the preference",
+                                            "description": "Value of the preference.",
                                             "type": [
                                                 "string",
                                                 "boolean",
@@ -509,7 +533,7 @@
                         }
                     },
                     "else": {
-                        "description": "The value of the preference",
+                        "description": "The value of the preference.",
                         "properties": {
                             "value": {
                                 "type": [
@@ -533,7 +557,12 @@
                     "then": {
                         "properties": {
                             "language": {
-                                "type": "string"
+                                "description": "Language the code editor should colorize and/or autocomplete for.",
+                                "type": "string",
+                                "examples": [
+                                    "javascript",
+                                    "python"
+                                ]
                             }
                         }
                     }
@@ -541,7 +570,7 @@
             ]
         },
         "component_property": {
-            "description": "The properties, that save persistent information about the component",
+            "description": "A property that saves persistent information about the component, also known as a persistent variable.",
             "type": "object",
             "required": [
                 "name",
@@ -549,11 +578,11 @@
             ],
             "properties": {
                 "name": {
-                    "description": "Name of the property",
+                    "description": "Name of the property.",
                     "type": "string"
                 },
                 "type": {
-                    "description": "Type of the property",
+                    "description": "Type of the property.",
                     "type": "string",
                     "enum": [
                         "text",
@@ -564,15 +593,15 @@
                     ]
                 },
                 "label": {
-                    "description": "Label of the property",
+                    "description": "Label of the property.",
                     "type": "string"
                 },
                 "description": {
-                    "description": "Description of the property",
+                    "description": "Description of the property.",
                     "type": "string"
                 },
                 "default": {
-                    "description": "Default value of the property",
+                    "description": "Default value of the property.",
                     "type": [
                         "string",
                         "boolean",
@@ -580,19 +609,19 @@
                     ]
                 },
                 "secure": {
-                    "description": "Direct access from the javascript code of the application mashup component to this variable is disallowed if the value of this attribute is true",
+                    "description": "Direct access from the javascript code of the application mashup component to this variable is disallowed if the value of this attribute is true.",
                     "type": "boolean",
                     "default": false
                 },
                 "multiuser": {
-                    "description": "Whether to store a different value for each user",
+                    "description": "Whether to store a different value for each user.",
                     "type": "boolean",
                     "default": false
                 }
             }
         },
         "mashup_tab": {
-            "description": "A mashup tab",
+            "description": "A mashup tab.",
             "type": "object",
             "required": [
                 "name",
@@ -601,14 +630,18 @@
             ],
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Name of the tab."
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Title of the tab."
                 },
                 "resources": {
+                    "description": "List of resources contained in the tab.",
                     "type": "array",
                     "items": {
+                        "description": "A resource contained in a tab.",
                         "type": "object",
                         "required": [
                             "id",
@@ -766,6 +799,7 @@
             }
         },
         "mashup_param": {
+            "description": "A mashup parameter.",
             "type": "object",
             "required": [
                 "name",
@@ -831,14 +865,11 @@
                 }
             }
         },
-        "js_files": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        },
         "contact": {
-            "type": "object",
+            "type": [
+                "object",
+                "string"
+            ],
             "required": [
                 "name"
             ],
@@ -852,6 +883,24 @@
                 "url": {
                     "type": "string"
                 }
+            },
+            "additionalProperties": false,
+            "examples": [
+                {
+                    "name": "John Doe",
+                    "email": "john-doe@example.com",
+                    "url": "http://example.com/johndoe"
+                },
+                "John Doe <john-doe@example.com> (http://example.com/johndoe)"
+            ]
+        },
+        "contacts": {
+            "type": [
+                "array",
+                "string"
+            ],
+            "items": {
+                "$ref": "#/$defs/contact"
             }
         },
         "wiring": {
@@ -863,6 +912,7 @@
                     "default": "1.0"
                 },
                 "inputs": {
+                    "description": "List of inputs of the component. This component will be able to receive data from the inputs listed here.",
                     "type": "array",
                     "default": [],
                     "items": {
@@ -873,27 +923,51 @@
                         ],
                         "properties": {
                             "name": {
+                                "description": "Name that will uniquely identify this input.",
                                 "type": "string"
                             },
                             "type": {
-                                "type": "string"
+                                "description": "Type of the input. This field can only be set to `text` right now.",
+                                "type": "string",
+                                "enum": [
+                                    "text"
+                                ]
                             },
                             "label": {
+                                "description": "Label of the input. This field is used to show a human-readable and translatable name of the input.",
                                 "type": "string"
                             },
                             "description": {
+                                "description": "Text describing what is going to happen if an event arrives this input endpoint. This description is very important for the wiring process as the user needs this information for taking decisions on how to wire widgets/operators.",
                                 "type": "string"
                             },
                             "actionlabel": {
+                                "description": "Short text describing what is going to happen if an event is sent to this input endpoint. Other widgets will use this text in buttons, selection boxes, etc... allowing end users to select what to do (and the widget will send a event to the associated target endpoint).",
                                 "type": "string"
                             },
                             "friendcode": {
+                                "description": "Keyword used to tag the input endpoint, so it can be easily suggested valid conection during the wiring process.",
                                 "type": "string"
                             }
-                        }
+                        },
+                        "examples": [
+                            {
+                                "name": "input",
+                                "type": "text"
+                            },
+                            {
+                                "name": "poiInput",
+                                "type": "text",
+                                "label": "Insert/Update PoI",
+                                "description": "Insert or update a Point of Interest.",
+                                "actionlabel": "Map Viewer Insert/Update PoI",
+                                "friendcode": "poi poi-list"
+                            }
+                        ]
                     }
                 },
                 "outputs": {
+                    "description": "List of outputs of the component. This component will be able to send data to the outputs listed here.",
                     "type": "array",
                     "default": [],
                     "items": {
@@ -904,21 +978,42 @@
                         ],
                         "properties": {
                             "name": {
+                                "description": "Name that will uniquely identify this output.",
                                 "type": "string"
                             },
                             "type": {
-                                "type": "string"
+                                "description": "Type of the output. This field can only be set to `text` right now.",
+                                "type": "string",
+                                "enum": [
+                                    "text"
+                                ]
                             },
                             "label": {
+                                "description": "Label of the output. This field is used to show a human-readable and translatable name of the output.",
                                 "type": "string"
                             },
                             "description": {
+                                "description": "Text describing what is going to happen if an event is sent to this output endpoint. This description is very important for the wiring process as the user needs this information for taking decisions on how to wire widgets/operators.",
                                 "type": "string"
                             },
                             "friendcode": {
+                                "description": "Keyword used to tag the output endpoint, so it can be easily suggested valid conection during the wiring process.",
                                 "type": "string"
                             }
-                        }
+                        },
+                        "examples": [
+                            {
+                                "name": "output",
+                                "type": "text"
+                            },
+                            {
+                                "name": "poiOutput",
+                                "type": "text",
+                                "label": "PoI selected",
+                                "description": "A PoI has been selected on the map",
+                                "friendcode": "poi"
+                            }
+                        ]
                     }
                 }
             }
@@ -1038,7 +1133,8 @@
                         }
                     ]
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "visualdescription_components": {
             "type": "array",
@@ -1081,7 +1177,8 @@
                                 }
                             ]
                         }
-                    }
+                    },
+                    "additionalProperties": false
                 }
             }
         },
@@ -1152,7 +1249,8 @@
                             }
                         ]
                     }
-                }
+                },
+                "additionalProperties": false
             }
         },
         "visualdescription_behabiours": {
@@ -1193,19 +1291,29 @@
                             }
                         ]
                     }
-                }
+                },
+                "additionalProperties": false
             }
         },
         "translations": {
+            "description": "Translations of the component. Each key is a language code and the value is a translation object of the component elements in that language.",
             "type": "object",
             "default": {},
             "patternProperties": {
                 ".*": {
-                    "type": "string"
+                    "description": "Translation object of the component elements for a specified language.",
+                    "type": "string",
+                    "patternProperties": {
+                        ".*": {
+                            "description": "Translation of a component element for a specified language.",
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },
         "endpoint": {
+            "description": "A wiring endpoint of a component.",
             "type": "object",
             "required": [
                 "type",
@@ -1225,7 +1333,8 @@
                         "integer"
                     ]
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "size": {
             "type": "string",
@@ -1233,7 +1342,14 @@
         },
         "version": {
             "type": "string",
-            "pattern": "([1-9]\\d*\\.|0\\.)*([1-9]\\d*|0)((a|b|rc)[1-9]\\d*)?(-dev.*)?"
+            "pattern": "([1-9]\\d*\\.|0\\.)*([1-9]\\d*|0)((a|b|rc)[1-9]\\d*)?(-dev.*)?",
+            "examples": [
+                "1.0.0",
+                "1.0.0a1",
+                "1.0.0b2",
+                "1.0.0rc3",
+                "1.0.0-dev"
+            ]
         },
         "name": {
             "type": "string",
