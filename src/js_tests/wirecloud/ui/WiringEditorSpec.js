@@ -1687,7 +1687,10 @@
                 spyOn(Wirecloud.HistoryManager, "getCurrentState").and.returnValue({
                     "workspace_owner": "workspace_owner",
                     "workspace_name": "workspace_name",
-                    "view": "workspace"
+                    "view": "workspace",
+                    "params": {
+                        "testParam": "testValue"
+                    }
                 });
                 const editor = new ns.WiringEditor(1);
 
@@ -1696,7 +1699,10 @@
                 expect(state).toEqual({
                     "workspace_owner": "workspace_owner",
                     "workspace_name": "workspace_name",
-                    "view": "wiring"
+                    "view": "wiring",
+                    "params": {
+                        "testParam": "testValue"
+                    }
                 });
                 expect(Wirecloud.HistoryManager.getCurrentState).toHaveBeenCalledWith();
             });

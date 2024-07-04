@@ -207,7 +207,7 @@ class JSONTemplateParser(object):
             self._check_array_fields(('preferences', 'properties'))
             for preference in self._info['preferences']:
                 self._check_string_fields(('name', 'type'), place=preference, required=True)
-                self._check_string_fields(('label', 'description', 'default'), place=preference)
+                self._check_string_fields(('label', 'description', 'default', 'language'), place=preference)
                 self._check_boolean_fields(('readonly', 'secure'), place=preference, default=False)
                 self._check_string_fields(('value',), place=preference, null=True, default=None)
                 preference['multiuser'] = False
@@ -221,7 +221,7 @@ class JSONTemplateParser(object):
 
         if self._info['type'] == 'widget':
             if self._info['macversion'] > 1:
-                self._check_string_fields(('entrypoint', ), required=True)
+                self._check_string_fields(('entrypoint', ), required=False)
 
             self._check_array_fields(('altcontents',))
             if self._info.get('contents', None) is None:
@@ -235,7 +235,7 @@ class JSONTemplateParser(object):
 
         elif self._info['type'] == 'operator':
             if self._info['macversion'] > 1:
-                self._check_string_fields(('entrypoint', ), required=True)
+                self._check_string_fields(('entrypoint', ), required=False)
 
         elif self._info['type'] == 'mashup':
 

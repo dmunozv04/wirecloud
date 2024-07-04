@@ -69,4 +69,16 @@
         ComponentManagement: privates._ComponentManagementAPI
     };
 
+    Wirecloud.APIComponents = {}
+    const registerWidgetClass = function registerWidgetClass(script, widgetClass) {
+        Wirecloud.APIComponents[script.dataset.id] = widgetClass;
+    };
+
+    const registerOperatorClass = function registerOperatorClass(script, operatorClass) {
+        Wirecloud.APIComponents[script.dataset.id] = operatorClass;
+    }
+
+    Wirecloud.registerWidgetClass = registerWidgetClass;
+    Wirecloud.registerOperatorClass = registerOperatorClass;
+
 })(window.Wirecloud);

@@ -192,7 +192,8 @@
             const data = {
                 workspace_owner: currentState.workspace_owner,
                 workspace_name: currentState.workspace_name,
-                view: 'marketplace'
+                view: 'marketplace',
+                params: currentState.params
             };
 
             if (this.loading === false && this.error === false && this.alternatives.getCurrentAlternative() !== this.emptyAlternative) {

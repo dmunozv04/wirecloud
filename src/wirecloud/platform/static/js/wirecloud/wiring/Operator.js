@@ -55,6 +55,7 @@
             const script = document.createElement('script');
             script.setAttribute('type', 'text/javascript');
             script.setAttribute('src', js_file);
+            script.dataset.id = this.meta.uri;
             script.async = false;
             document.body.appendChild(script);
             this.loaded_scripts.push(script);
@@ -203,7 +204,11 @@
             this.wrapperElement.contentDocument.defaultView.addEventListener('unload', on_unload.bind(this), true);
         } else if (!this.meta.missing && this.meta.macversion > 1) {
             // If this is a v2 or later operator, we need to instantiate it's entrypoint class
-            const entrypoint = window[this.meta.entrypoint];
+            let entrypoint = Wirecloud.APIComponents[this.meta.uri];
+            if (!entrypoint) {
+                entrypoint = window[this.meta.entrypoint];
+            }
+
             if (entrypoint === undefined) {
                 this.logManager.log("Operator entrypoint class not found!", {console: false});
             } else {

@@ -208,6 +208,7 @@
             const script = document.createElement('script');
             script.setAttribute('type', 'text/javascript');
             script.setAttribute('src', js_file);
+            script.dataset.id = this.meta.uri;
             script.async = false;
             document.body.appendChild(script);
             this.loaded_scripts.push(script);
@@ -312,7 +313,11 @@
             // If this is a v2 or later widget, we need to instantiate it's entrypoint class
             _unloadScripts.call(this);
             _loadScripts.call(this).then(() => {
-                const entrypoint = window[this.meta.entrypoint];
+                let entrypoint = Wirecloud.APIComponents[this.meta.uri];
+                if (!entrypoint) {
+                    entrypoint = window[this.meta.entrypoint];
+                }
+
                 if (entrypoint === undefined) {
                     this.logManager.log("Widget entrypoint class not found!", {console: false});
                 } else {

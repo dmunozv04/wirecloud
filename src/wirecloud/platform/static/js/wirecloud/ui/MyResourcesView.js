@@ -102,7 +102,8 @@
                 workspace_owner: currentState.workspace_owner,
                 workspace_name: currentState.workspace_name,
                 view: 'myresources',
-                subview: 'search'
+                subview: 'search',
+                params: currentState.params
             };
 
             const subview = this.alternatives.getCurrentAlternative();

@@ -565,6 +565,7 @@ class RDFTemplateParser(object):
                 'secure': self._get_field(WIRE, 'secure', preference, required=False).lower() == 'true',
                 'multiuser': False,
                 'required': self._get_field(WIRE, 'required', preference, required=False).lower() == 'true',
+                'language': self._get_field(WIRE, 'language', preference, required=False)
             }
             if preference_info['type'] == 'list':
                 preference_info['options'] = []
@@ -655,7 +656,7 @@ class RDFTemplateParser(object):
                 raise TemplateParseException(_('Missing required field: Javascript files'))
 
             if self._info['macversion'] > 1:
-                self._info['entrypoint'] = self._get_field(WIRE, 'entryPoint', self._rootURI, required=True)
+                self._info['entrypoint'] = self._get_field(WIRE, 'entryPoint', self._rootURI, required=False)
 
     def _parse_translation_catalogue(self):
         self._info['default_lang'] = 'en'

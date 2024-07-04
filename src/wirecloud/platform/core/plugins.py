@@ -115,6 +115,7 @@ STYLED_ELEMENTS_FILES = (
     'js/StyledElements/NumericField.js',
     'js/StyledElements/TextField.js',
     'js/StyledElements/TextArea.js',
+    'js/StyledElements/CodeArea.js',
     'js/StyledElements/List.js',
     'js/StyledElements/PasswordField.js',
     'js/StyledElements/Select.js',
@@ -223,6 +224,7 @@ STYLED_ELEMENTS_CSS = (
     'css/styledelements/styled_alternatives.scss',
     'css/styledelements/styled_container.css',
     'css/styledelements/styled_button.scss',
+    'css/styledelements/styled_code_area.scss',
     'css/styledelements/styled_checkbox.css',
     'css/styledelements/styled_pills.scss',
     'css/styledelements/styled_notebook.scss',
@@ -393,7 +395,11 @@ class WirecloudCorePlugin(WirecloudPlugin):
             'longdescription': {
                 'label': _('Long description'),
                 'description': _("Detailed workspace's description. This description can contain formatting."),
-            }
+            },
+            "params": {
+                "description": _("Dictionary with the parameters of the workspace"),
+                "label": _("Params"),
+            },
         }
 
     def get_workspace_preferences(self):

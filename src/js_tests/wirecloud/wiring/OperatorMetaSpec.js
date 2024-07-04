@@ -63,7 +63,7 @@
                 }).toThrowError(TypeError);
             });
 
-            it("throws a TypeError exception when the entrypoint is missing for mac version 2", () => {
+            it("does not throw a TypeError exception when the entrypoint is missing for mac version 2", () => {
                 expect(() => {
                     new ns.OperatorMeta({
                         vendor: "Wirecloud",
@@ -75,7 +75,7 @@
                         macversion: 2,
                         js_files: ["Test"]
                     });
-                }).toThrowError(TypeError);
+                }).not.toThrow();
             });
 
             it("throws a TypeError exception when the js_files is missing for mac version 2", () => {

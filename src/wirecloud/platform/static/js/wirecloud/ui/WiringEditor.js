@@ -760,11 +760,11 @@ Wirecloud.ui = Wirecloud.ui || {};
 
         buildStateData() {
             const currentState = Wirecloud.HistoryManager.getCurrentState();
-
             return {
                 workspace_owner: currentState.workspace_owner,
                 workspace_name: currentState.workspace_name,
-                view: this.view_name
+                view: this.view_name,
+                params: currentState.params
             };
         }
 

@@ -58,10 +58,6 @@
                 if (!this.js_files) {
                     throw new TypeError("missing js_files attribute in operator description");
                 }
-
-                if (!this.entrypoint) {
-                    throw new TypeError("missing entrypoint attribute in operator description");
-                }
             }
 
             desc.properties.forEach((property_info) => {

@@ -68,21 +68,21 @@
                 }).toThrowError(TypeError);
             });
 
-            it("throws a TypeError exception when the entrypoint is missing for mac version 2", () => {
+            it("does not throw a TypeError exception when the entrypoint is missing for mac version 2", () => {
                 expect(() => {
                     new Wirecloud.WidgetMeta({
                         vendor: "Wirecloud",
                         name: "TestWidget",
-                        version: "1.0",
-                        type: "widget",
-                        js_files: [],
-                        macversion: 2,
                         preferences: [],
+                        properties: [],
+                        version: "1.0",
+                        macversion: 2,
+                        js_files: [],
                         contents: {
                             src: "index.html"
                         }
                     });
-                }).toThrowError(TypeError);
+                }).not.toThrow();
             });
 
             it("throws a TypeError exception when the js_files is missing for mac version 2", () => {
@@ -95,6 +95,7 @@
                         macversion: 2,
                         entrypoint: "Test",
                         preferences: [],
+                        properties: [],
                         contents: {
                             src: "index.html"
                         }
