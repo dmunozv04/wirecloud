@@ -20,14 +20,22 @@ case "$1" in
     createsuperuser)
         manage.py createsuperuser
         ;;
-    gunicorn)
+    gunicorn|gunicorn-aio)
+
         manage.py collectstatic --noinput
         manage.py migrate --fake-initial
         manage.py populate
 
+        # select wirecloud_instance.wsgi:application or wirecloud_instance.wsgi:allInOneApplication depending on the value of $1
+        if [ "$1" = 'gunicorn' ]; then
+            WSGI_APPLICATION='wirecloud_instance.wsgi:application'
+        else
+            WSGI_APPLICATION='wirecloud_instance.wsgi:allInOneApplication'
+        fi
+
         # allow the container to be started with `--user`
         if [ "$(id -u)" = '0' ]; then
-            exec gosu wirecloud /usr/local/bin/gunicorn wirecloud_instance.wsgi:application \
+            exec gosu wirecloud /usr/local/bin/gunicorn $WSGI_APPLICATION \
                 --forwarded-allow-ips "${FORWARDED_ALLOW_IPS}" \
                 --workers ${WORKERS} \
                 --threads ${THREADS} \
@@ -35,7 +43,7 @@ case "$1" in
                 --log-file - \
                 --logger-class wirecloud.glogger.GunicornLogger
         else
-            exec /usr/local/bin/gunicorn wirecloud_instance.wsgi:application \
+            exec /usr/local/bin/gunicorn $WSGI_APPLICATION \
                 --forwarded-allow-ips "${FORWARDED_ALLOW_IPS}" \
                 --workers ${WORKERS} \
                 --threads ${THREADS} \

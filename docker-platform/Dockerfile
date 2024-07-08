@@ -45,7 +45,7 @@ RUN --mount=type=bind,from=builder,source=/wirecloud/src/dist/,target=/dist/ \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     pip install /dist/*.whl \ 
     social-auth-app-django "gunicorn==21.2" "psycopg2==2.8.6" pylibmc pysolr "elasticsearch==2.4.1" \
-    "regex==2019.02.18" "channels<2.3" "channels-redis" "wirecloud-keycloak>=0.3.0" && \
+    "regex==2019.02.18" "channels<2.3" "channels-redis" "wirecloud-keycloak>=0.3.0" "whitenoise" && \
     pip uninstall selenium -y
 
 RUN adduser --system --group --shell /bin/bash wirecloud && \

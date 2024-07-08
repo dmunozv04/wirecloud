@@ -30,3 +30,12 @@ application = get_wsgi_application()
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
+
+try:
+    from whitenoise import WhiteNoise
+    allInOneApplication = WhiteNoise(application, root = "/var/www/static", prefix="static/", autorefresh=True)
+except ImportError:
+    # Whitenoise is not installed
+    # Only error if wgsi attempts to access allInOneApplication
+    def allInOneApplication(environ, start_response):
+        raise Exception("Whitenoise is not installed, wirecloud cannot run in allInOne mode")
