@@ -68,7 +68,7 @@
             "description": "Absolute or template-relative URL of the full license document associated to the mashable application component.",
             "type": "string"
         },
-        "longDescription": {
+        "longdescription": {
             "description": "A detailed  description of the mashable application component (using Markdown syntax by default).",
             "type": "string"
         },
@@ -144,6 +144,9 @@
         "version": {
             "description": "Version of the mashable application component.",
             "$ref": "#/$defs/version"
+        },
+        "translations": {
+            "$ref": "#/$defs/translations"
         }
     },
     "allOf": [
@@ -875,12 +878,15 @@
             ],
             "properties": {
                 "name": {
+                    "description": "Name of the contact.",
                     "type": "string"
                 },
                 "email": {
+                    "description": "Email of the contact.",
                     "type": "string"
                 },
                 "url": {
+                    "description": "URL of the contact.",
                     "type": "string"
                 }
             },
@@ -1302,7 +1308,7 @@
             "patternProperties": {
                 ".*": {
                     "description": "Translation object of the component elements for a specified language.",
-                    "type": "string",
+                    "type": "object",
                     "patternProperties": {
                         ".*": {
                             "description": "Translation of a component element for a specified language.",
