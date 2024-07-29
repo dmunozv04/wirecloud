@@ -34,6 +34,7 @@ from django.utils.translation import ugettext as _
 from wirecloud.catalogue.models import CatalogueResource
 import wirecloud.catalogue.utils as catalogue_utils
 from wirecloud.commons.baseviews import Resource
+from wirecloud.commons.utils.cache import check_if_modified_since, patch_cache_headers
 from wirecloud.commons.utils.http import authentication_required, authentication_required_cond, build_downloadfile_response, build_error_response, normalize_boolean_param, consumes, parse_json_request, produces
 from wirecloud.commons.utils.structures import CaseInsensitiveDict
 from wirecloud.commons.utils.template import TemplateParseException, UnsupportedFeature
@@ -44,6 +45,7 @@ from wirecloud.platform.localcatalogue.utils import fix_dev_version, install_com
 from wirecloud.platform.markets.utils import get_market_managers
 from wirecloud.platform.models import Workspace
 from wirecloud.platform.settings import ALLOW_ANONYMOUS_ACCESS
+from wirecloud.platform.workspace.utils import get_workspace_resources_data
 from wirecloud.proxy.views import parse_context_from_referer, WIRECLOUD_PROXY
 
 
@@ -323,26 +325,11 @@ class WorkspaceResourceCollection(Resource):
         if not workspace.is_accessible_by(request.user):
             return build_error_response(request, 403, _("You don't have access to this workspace"))
 
-        resources = set()
-        for tab in workspace.tab_set.all():
-            for iwidget in tab.iwidget_set.select_related('widget__resource').all():
-                if iwidget.widget is not None and iwidget.widget.resource.is_available_for(workspace.creator):
-                    resources.add(iwidget.widget.resource)
+        #check for last-modified header
+        last_modified = workspace.last_modified
+        if not check_if_modified_since(request, last_modified):
+            response = HttpResponse(status=304)
+            patch_cache_headers(response, last_modified)
+            return response
 
-        for operator_id, operator in workspace.wiringStatus['operators'].items():
-            vendor, name, version = operator['name'].split('/')
-            try:
-                resource = CatalogueResource.objects.get(vendor=vendor, short_name=name, version=version)
-                if resource.is_available_for(workspace.creator):
-                    resources.add(resource)
-            except CatalogueResource.DoesNotExist:
-                pass
-
-        result = {}
-        process_urls = request.GET.get('process_urls', 'true') == 'true'
-        for resource in resources:
-            if resource.is_available_for(workspace.creator):
-                options = resource.get_processed_info(request, process_urls=process_urls, url_pattern_name="wirecloud.showcase_media")
-                result[resource.local_uri_part] = options
-
-        return HttpResponse(json.dumps(result, sort_keys=True), content_type='application/json; chatset=UTF-8')
+        return get_workspace_resources_data(request, workspace).get_response(cacheable=True)
