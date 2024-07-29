@@ -21,20 +21,20 @@ import hashlib
 import time
 
 from django.http import HttpResponse
-from django.utils.http import http_date
+from django.utils.http import http_date, parse_http_date
 
 
 def patch_cache_headers(response, timestamp=None, cache_timeout=None, etag=None):
 
-    current_timestamp = int(time.time() * 1000)
+    current_timestamp = int(time.time())
 
     if timestamp is None:
         timestamp = current_timestamp
     else:
-        timestamp = int(timestamp)
+        timestamp = int(timestamp / 1000)
 
     if not response.has_header('Last-Modified'):
-        response['Last-Modified'] = http_date(timestamp / 1000)
+        response['Last-Modified'] = http_date(timestamp)
 
     if etag is not None:
         response['ETag'] = etag
@@ -43,11 +43,22 @@ def patch_cache_headers(response, timestamp=None, cache_timeout=None, etag=None)
 
     if cache_timeout is not None and timestamp + cache_timeout > current_timestamp:
         response['Cache-Control'] = 'private, max-age=%s' % (timestamp + cache_timeout - current_timestamp)
-        response['Expires'] = http_date((timestamp / 1000) + cache_timeout)
+        response['Expires'] = http_date((timestamp) + cache_timeout)
     else:
         response['Cache-Control'] = 'private, max-age=0'
 
     return response
+
+"""Check if the request has been modified since the last time it was requested.
+Returns True if the request has been modified since the last time it was requested, False otherwise."""
+def check_if_modified_since(request, time_last_modified):
+    if_modified_since = request.META.get('HTTP_IF_MODIFIED_SINCE', None)
+    if if_modified_since is None:
+        return True
+    if_modified_since = parse_http_date(if_modified_since)
+    if int(time_last_modified/1000) <= if_modified_since:
+        return False
+    return True
 
 
 class CacheableData(object):
