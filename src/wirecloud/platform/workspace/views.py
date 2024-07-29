@@ -32,6 +32,7 @@ from wirecloud.catalogue import utils as catalogue
 from wirecloud.catalogue.models import CatalogueResource
 from wirecloud.commons.baseviews import Resource, Service
 from wirecloud.commons.utils.db import save_alternative
+from wirecloud.commons.utils.cache import check_if_modified_since, patch_cache_headers
 from wirecloud.commons.utils.http import authentication_required, authentication_required_cond, build_error_response, get_content_type, normalize_boolean_param, consumes, parse_json_request, produces
 from wirecloud.commons.utils.template import is_valid_name, is_valid_vendor, is_valid_version, TemplateParser
 from wirecloud.commons.utils.transaction import commit_on_http_success
@@ -158,6 +159,12 @@ class WorkspaceEntry(Resource):
 
         if not workspace.is_accessible_by(request.user):
             return build_error_response(request, 403, _("You don't have permission to access this workspace"))
+
+        last_modified = workspace.last_modified
+        if not check_if_modified_since(request, last_modified):
+            response =  HttpResponse(status=304)
+            patch_cache_headers(response, last_modified)
+            return response
 
         workspace_data = get_global_workspace_data(workspace, request.user)
 

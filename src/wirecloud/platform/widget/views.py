@@ -31,7 +31,7 @@ from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView
 
 from wirecloud.catalogue.models import CatalogueResource
-from wirecloud.commons.utils.cache import patch_cache_headers
+from wirecloud.commons.utils.cache import check_if_modified_since, patch_cache_headers
 from wirecloud.commons.utils.downloader import download_local_file
 from wirecloud.commons.utils.http import build_response, build_downloadfile_response, get_current_domain
 from wirecloud.platform.themes import get_active_theme_name
@@ -125,6 +125,13 @@ def serve_showcase_media(request, vendor, name, version, file_path):
     # For now, all widgets and operators are freely accessible/distributable
     # if not resource.is_available_for(request.user):
     #     return build_error_response(request, 403, "Forbidden")
+ 
+    # send fast 304 if possible
+    creation_date = resource.creation_date.timestamp()
+    if not check_if_modified_since(request, creation_date*1000):
+        response = HttpResponse(status=304)
+        patch_cache_headers(response, creation_date)
+        return response
 
     if resource.resource_type() == 'widget' and request.GET.get('entrypoint', 'false') == 'true':
         return process_widget_code(request, resource)
