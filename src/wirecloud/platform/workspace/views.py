@@ -488,7 +488,7 @@ class WorkspacePublisherEntry(Resource):
         # Build mashup wgt file
         f = BytesIO()
         zf = zipfile.ZipFile(f, 'w')
-        zf.writestr('config.json', json.dumps(description, indent = 4))
+        zf.writestr('macconfig.json', json.dumps(description, indent = 4))
         for filename, extra_file in extra_files:
             zf.writestr(filename, extra_file.read())
         for resource_info in options['embedded']:
