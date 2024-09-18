@@ -38,7 +38,7 @@ class InvalidContents(Exception):
 
 
 class WgtFile(object):
-    _possible_template_filenames = ['config.xml', 'config.json']
+    _possible_template_filenames = ['config.xml', 'macconfig.json']
     _template_filename = None
 
     def __init__(self, _file):
@@ -72,7 +72,7 @@ class WgtFile(object):
             template_file_content = self.read(self._template_filename)
             return template_file_content
         except KeyError:
-            raise InvalidContents('Missing config.xml or config.json at the root of the zipfile (wgt)')
+            raise InvalidContents('Missing config.xml or macconfig.json at the root of the zipfile (wgt)')
 
     def extract_file(self, file_name, output_path, recreate_=False):
         contents = self.read(file_name)
