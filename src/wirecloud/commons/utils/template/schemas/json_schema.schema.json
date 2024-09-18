@@ -409,6 +409,20 @@
                             }
                         ],
                         "description": "Mashup wiring."
+                    },
+                    "screenSizes": {
+                        "description": "List of screen sizes supported by the mashup.",
+                        "default": [],
+                        "items": {
+                            "$ref": "#/$defs/mashup_screenSize"
+                        },
+                        "type": "array"
+                    },
+                    "layout": {
+                        "type": [
+                            "string",
+                            "integer"
+                        ]
                     }
                 }
             }
@@ -623,6 +637,36 @@
                 }
             }
         },
+        "mashup_screenSize": {
+            "properties": {
+                "id": {
+                    "minimum": 0,
+                    "type": "integer"
+                },
+                "moreOrEqual": {
+                    "minimum": 0,
+                    "type": "integer"
+                },
+                "lessOrEqual": {
+                    "minimum": -1,
+                    "type": "integer"
+                },
+                "rendering": {
+                    "$ref": "#/$defs/mashup_rendering"
+                },
+                "position": {
+                    "$ref": "#/$defs/mashup_position"
+                }
+            },
+            "required": [
+                "id",
+                "moreOrEqual",
+                "lessOrEqual",
+                "rendering",
+                "position"
+            ],
+            "type": "object"
+        },
         "mashup_tab": {
             "description": "A mashup tab.",
             "type": "object",
@@ -732,69 +776,10 @@
                                 }
                             },
                             "rendering": {
-                                "type": "object",
-                                "required": [
-                                    "width",
-                                    "height",
-                                    "layout"
-                                ],
-                                "properties": {
-                                    "fulldragboard": {
-                                        "type": "boolean"
-                                    },
-                                    "minimized": {
-                                        "type": "boolean"
-                                    },
-                                    "width": {
-                                        "$ref": "#/$defs/size"
-                                    },
-                                    "height": {
-                                        "$ref": "#/$defs/size"
-                                    },
-                                    "layout": {
-                                        "type": [
-                                            "string",
-                                            "integer"
-                                        ]
-                                    },
-                                    "relwidth": {
-                                        "type": "boolean"
-                                    },
-                                    "relheight": {
-                                        "type": "boolean"
-                                    },
-                                    "titlevisible": {
-                                        "type": "boolean"
-                                    }
-                                }
+                                "$ref": "#/$defs/mashup_rendering"
                             },
                             "position": {
-                                "allOf": [
-                                    {
-                                        "$ref": "#/$defs/Position2D"
-                                    }
-                                ],
-                                "type": "object",
-                                "required": [
-                                    "z"
-                                ],
-                                "properties": {
-                                    "anchor": {
-                                        "type": "string"
-                                    },
-                                    "relx": {
-                                        "type": "boolean"
-                                    },
-                                    "rely": {
-                                        "type": "boolean"
-                                    },
-                                    "z": {
-                                        "type": [
-                                            "number",
-                                            "string"
-                                        ]
-                                    }
-                                }
+                                "$ref": "#/$defs/mashup_position"
                             }
                         }
                     }
@@ -844,6 +829,70 @@
                 "required": {
                     "type": "boolean",
                     "default": false
+                }
+            }
+        },
+        "mashup_rendering": {
+            "type": "object",
+            "required": [
+                "width",
+                "height"
+            ],
+            "properties": {
+                "fulldragboard": {
+                    "type": "boolean"
+                },
+                "minimized": {
+                    "type": "boolean"
+                },
+                "width": {
+                    "$ref": "#/$defs/size"
+                },
+                "height": {
+                    "$ref": "#/$defs/size"
+                },
+                "layout": {
+                    "type": [
+                        "string",
+                        "integer"
+                    ]
+                },
+                "relwidth": {
+                    "type": "boolean"
+                },
+                "relheight": {
+                    "type": "boolean"
+                },
+                "titlevisible": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "mashup_position": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/Position2D"
+                }
+            ],
+            "type": "object",
+            "required": [
+                "z"
+            ],
+            "properties": {
+                "anchor": {
+                    "type": "string"
+                },
+                "relx": {
+                    "type": "boolean"
+                },
+                "rely": {
+                    "type": "boolean"
+                },
+                "z": {
+                    "type": [
+                        "number",
+                        "string"
+                    ]
                 }
             }
         },
