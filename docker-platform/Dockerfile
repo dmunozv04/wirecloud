@@ -2,7 +2,8 @@
 ARG WIRECLOUD_PYTHON_VERSION=3.10
 ARG WIRECLOUD_DEBIAN_VERSION=bookworm
 
-FROM python:${WIRECLOUD_PYTHON_VERSION}-${WIRECLOUD_DEBIAN_VERSION} as builder
+#$BUILDPLATFORM allows to build the image on the native platform of the builder, avoiding emulation
+FROM --platform=$BUILDPLATFORM python:${WIRECLOUD_PYTHON_VERSION}-${WIRECLOUD_DEBIAN_VERSION} AS builder
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \
@@ -44,7 +45,7 @@ RUN --mount=type=bind,from=builder,source=/wirecloud/src/dist/,target=/dist/ \
     --mount=type=cache,target=/root/.cache/pip,sharing=locked \
     pip install /dist/*.whl \ 
     social-auth-app-django "gunicorn==21.2" "psycopg2==2.8.6" pylibmc pysolr "elasticsearch==2.4.1" \
-    "regex==2019.02.18" "channels<2.3" "channels-redis" "wirecloud-keycloak>=0.3.0" && \
+    "regex==2019.02.18" "channels<2.3" "channels-redis" "wirecloud-keycloak>=0.3.0" "whitenoise" && \
     pip uninstall selenium -y
 
 RUN adduser --system --group --shell /bin/bash wirecloud && \
