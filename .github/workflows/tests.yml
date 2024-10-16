@@ -14,12 +14,12 @@ jobs:
 
   js-unit-tests:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
       - name: Setup and run tests
         working-directory: ./src
         run: |
@@ -27,7 +27,7 @@ jobs:
           npm install grunt-cli -g
           grunt ci
       - name: Coveralls Parallel
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@release/v2
         with:
           github-token: ${{ secrets.github_token }}
           flag-name: browsers
@@ -38,19 +38,19 @@ jobs:
 
   build:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
       - name: Build
         working-directory: ./src
         run: ./setup.py bdist_wheel
       - name: Upload build wheel
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: wheel
           path: src/dist/*.whl
@@ -58,7 +58,7 @@ jobs:
 
   django-unit-tests:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -77,9 +77,9 @@ jobs:
       - name: Setup PostgreSQL
         run: |
           docker run --rm -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=wirecloud -d -p 5432:5432 --name postgres-wirecloud postgres:latest
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
@@ -105,7 +105,7 @@ jobs:
 
   django-search-indexes-tests:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -117,9 +117,9 @@ jobs:
       - name: Setup PostgreSQL
         run: |
           docker run --rm -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=wirecloud -d -p 5432:5432 --name postgres-wirecloud postgres:latest
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
       - name: Use Elasticsearch
@@ -169,7 +169,7 @@ jobs:
 
   django-selenium-tests:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Setup PostgreSQL
@@ -177,9 +177,9 @@ jobs:
           docker run --rm -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=wirecloud -d -p 5432:5432 --name postgres-wirecloud postgres:latest
       - name: Use Geckodriver
         uses: browser-actions/setup-geckodriver@latest
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
       - name: Use Elasticsearch
@@ -217,7 +217,7 @@ jobs:
       - django-selenium-tests
       - js-unit-tests
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Coveralls Finished
