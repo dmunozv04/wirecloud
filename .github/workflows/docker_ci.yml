@@ -31,7 +31,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: fiware/wirecloud, quay.io/fiware/wirecloud
+          images: |
+            ${{ env.DOCKERHUB_USERNAME && env.DOCKERHUB_TOKEN && 'fiware/wirecloud }}' || '' }}
+            ${{ env.QUAY_USERNAME && env.QUAY_TOKEN && 'quay.io/fiware/wirecloud' || '' }}
+            ghcr.io/${{ github.repository }}
 
       # https://github.com/docker/setup-qemu-action
       - name: Set up QEMU
@@ -60,13 +63,13 @@ jobs:
             }
   
       - name: Login to DockerHub
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && env.DOCKERHUB_USERNAME && env.DOCKERHUB_TOKEN
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Login to Quay.io
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && env.QUAY_USERNAME && env.QUAY_TOKEN
         uses: docker/login-action@v3
         with:
           registry: quay.io
