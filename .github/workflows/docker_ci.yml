@@ -36,7 +36,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.DOCKERHUB_USERNAME && 'fiware/wirecloud ' || '' }}
+            ${{ env.DOCKERHUB_USERNAME && 'fiware/wirecloud' || '' }}
             ${{ env.QUAY_USERNAME && 'quay.io/fiware/wirecloud' || '' }}
             ghcr.io/${{ github.repository }}
 
